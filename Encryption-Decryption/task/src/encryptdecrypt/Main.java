@@ -3,80 +3,6 @@ package encryptdecrypt;
 import java.io.*;
 import java.util.Scanner;
 
-interface CipherAlgorithm {
-    String encryption(String data, int key);
-
-    String decryption(String data, int key);
-}
-
-class ShiftAlgorithm implements CipherAlgorithm {
-
-    public String encryption(String data, int key) {
-        char[] chars = data.toCharArray();
-        for (int i = 0; i < chars.length; i++) {
-            if (chars[i] >= 'a' && chars[i] <= 'z') {
-                char newChar = (char) ((chars[i] - 'a' + key) % 26 + 'a');
-                chars[i] = newChar;
-            } else if (chars[i] >= 'A' && chars[i] <= 'Z') {
-                char newChar = (char) ((chars[i] - 'A' + key) % 26 + 'A');
-                chars[i] = newChar;
-            }
-        }
-        return new String(chars);
-    }
-
-    public String decryption(String data, int key) {
-        char[] chars = data.toCharArray();
-        for (int i = 0; i < chars.length; i++) {
-            if (chars[i] >= 'a' && chars[i] <= 'z') {
-                int code = (chars[i] - 'a' - key) % 26;
-                char newChar = (char) ((code < 0) ? code + 'z' + 1 : code + 'a');
-                chars[i] = newChar;
-            } else if (chars[i] >= 'A' && chars[i] <= 'Z') {
-                int code = (chars[i] - 'A' - key) % 26;
-                char newChar = (char) ((code < 0) ? code + 'Z' + 1 : code + 'a');
-                chars[i] = newChar;
-            }
-        }
-        return new String(chars);
-    }
-}
-
-class UnicodeAlgorithm implements CipherAlgorithm {
-
-    public String encryption(String data, int key) {
-        char[] chars = data.toCharArray();
-        for (int i = 0; i < chars.length; i++) {
-            chars[i] = (char) (chars[i] + key);
-        }
-        return new String(chars);
-    }
-
-    public String decryption(String data, int key) {
-        char[] chars = data.toCharArray();
-        for (int i = 0; i < chars.length; i++) {
-            chars[i] = (char) (chars[i] - key);
-        }
-        return new String(chars);
-    }
-}
-
-class Cryptographer {
-    private CipherAlgorithm algorithm;
-
-    public void setAlgorithm(CipherAlgorithm algorithm) {
-        this.algorithm = algorithm;
-    }
-
-    public String getEncryptedData(String data, int key) {
-        return algorithm.encryption(data, key);
-    }
-
-    public String getDecryptedData(String data, int key) {
-        return algorithm.decryption(data, key);
-    }
-}
-
 public class Main {
 
     public static void main(String[] args) {
@@ -155,14 +81,14 @@ public class Main {
 
     public static String readDataFromFile(String filename) {
         File file = new File(filename);
-        String text = "";
+        String data = "";
         try (Scanner scanner = new Scanner(file)) {
             while (scanner.hasNext()) {
-                text += scanner.nextLine() + "\n";
+                data += scanner.nextLine() + "\n";
             }
         } catch (FileNotFoundException e) {
             System.out.println("No file found: " + filename);
         }
-        return text;
+        return data;
     }
 }
